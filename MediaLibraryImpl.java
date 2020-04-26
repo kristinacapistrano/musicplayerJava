@@ -45,7 +45,7 @@ public class MediaLibraryImpl extends Object implements MediaLibrary{
          JSONObject media = new JSONObject(new JSONTokener(is));
          Iterator<String> it = media.keys();
          while (it.hasNext()){
-            String mediaTitle = it.next();
+	     String mediaTitle = it.next(); //reading song title 
             JSONObject aMed = media.optJSONObject(mediaTitle);
             if (aMed != null){
                MediaDescription md = new MediaDescription(aMed);

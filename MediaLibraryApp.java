@@ -163,24 +163,24 @@ public class MediaLibraryApp extends MediaLibraryGui implements
       for (int i = 0; i<musicList.length; i++){
          MediaDescription aMD = library.get(musicList[i]);
          String aMTitle = aMD.title;
-         debug("Adding song with title:"+aMD.title);
+	 //-----         debug("Adding song with title:"+aMD.title);
          DefaultMutableTreeNode toAdd = new DefaultMutableTreeNode(aMTitle);
          DefaultMutableTreeNode subNode = getSubLabelled(musicNode,aMD.album);
          if(subNode!=null){ // if album subnode already exists
-            debug("album exists: "+aMD.album);
+	     //---------      debug("album exists: "+aMD.album);
             //subNode.add(toAdd);
             model.insertNodeInto(toAdd, subNode,
                                  model.getChildCount(subNode));
          }else{ // album node does not exist
             DefaultMutableTreeNode anAlbumNode =
                new DefaultMutableTreeNode(aMD.album);
-            debug("no album, so add one with name: "+aMD.album);
+            //--------     debug("no album, so add one with name: "+aMD.album);
             //root.add(aCatNode);
             model.insertNodeInto(anAlbumNode, musicNode,
                                  model.getChildCount(musicNode));
             DefaultMutableTreeNode aSubCatNode = 
                new DefaultMutableTreeNode("aSubCat");
-            debug("adding subcat labelled: "+"aSubCat");
+            //--------     debug("adding subcat labelled: "+"aSubCat");
             model.insertNodeInto(toAdd,anAlbumNode,
                                  model.getChildCount(anAlbumNode));
          }
@@ -238,10 +238,7 @@ public class MediaLibraryApp extends MediaLibraryGui implements
 
    public void treeWillExpand(TreeExpansionEvent tee) {
       debug("In treeWillExpand with path: "+tee.getPath());
-      //DefaultMutableTreeNode dmtn =
-      //    (DefaultMutableTreeNode)tee.getPath().getLastPathComponent();
-      //System.out.println("will expand node: "+dmtn.getUserObject()+
-      //		   " whose path is: "+tee.getPath());
+
    }
 
    public void valueChanged(TreeSelectionEvent e) {
@@ -270,6 +267,7 @@ public class MediaLibraryApp extends MediaLibraryGui implements
 
    public void actionPerformed(ActionEvent e) {
       tree.removeTreeSelectionListener(this);
+      MusicLibrary x = new MusicLibraryImpl();
       if(e.getActionCommand().equals("Exit")) {
          System.exit(0);
       }else if(e.getActionCommand().equals("Save")) {
@@ -289,24 +287,16 @@ public class MediaLibraryApp extends MediaLibraryGui implements
                                                      fileNameJTF.getText().trim());
          library.add(aMD);
          rebuildTree();
-        /*
-         JFileChooser chooser = new JFileChooser();
-         chooser.setCurrentDirectory(
-            new File(System.getProperty("user.dir")));
-         FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                                                          "mp3 files", "mp3");
-         chooser.setFileFilter(filter);
-         int returnVal = chooser.showOpenDialog(this);
-         if(returnVal == JFileChooser.APPROVE_OPTION) {
-            debug("You chose to open the file: " +
-                                          chooser.getSelectedFile().getName());
-         }
-       */
+ 
       }else if(e.getActionCommand().equals("Search")) {
          String searchReqURL = pre+artistSearchJTF.getText().trim()+"&album="+albumSearchJTF.getText().trim()+
                                "&api_key="+lastFMKey+"&format=json";
          System.out.println("calling fetchAsyncURL with url: "+searchReqURL);
-         fetchAsyncURL(searchReqURL);
+	 String result = fetchURL(searchReqURL);
+	 System.out.println("......" + result);
+	 System.out.println(".....CREATING FILE " );
+	 x.toFile(result);
+	 
       }else if(e.getActionCommand().equals("Tree Refresh")) {
          rebuildTree();
       }else if(e.getActionCommand().equals("TrackRemove")) {
@@ -350,6 +340,7 @@ public class MediaLibraryApp extends MediaLibraryGui implements
             .thenApply(HttpResponse::body)
             .thenAccept(System.out::println)
             .join();
+	 
       }catch(Exception ex){
          System.out.println("Exception in fetchAsyncUrl request: "+ex.getMessage());
       }

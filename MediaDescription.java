@@ -55,7 +55,7 @@ public class MediaDescription extends Object implements Serializable {
          author = jsonObj.getString("author");
          album = jsonObj.getString("album");
          fileName = jsonObj.getString("fileName");
-         System.out.println("constructed "+this.toJsonString()+" from json");
+	 // System.out.println("constructed "+this.toJsonString()+" from json");
       }catch(Exception ex){
          System.out.println("Exception in MediaDescription(JSONObject): "+ex.getMessage());
       }
