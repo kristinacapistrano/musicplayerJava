@@ -23,6 +23,8 @@ import java.net.http.HttpResponse.BodyHandlers;
 import java.net.URLConnection;
 import java.time.Duration;
 
+import org.json.JSONObject;
+
 /**
 /**
  * Copyright 2020 Tim Lindquist,
@@ -267,7 +269,6 @@ public class MediaLibraryApp extends MediaLibraryGui implements
 
    public void actionPerformed(ActionEvent e) {
       tree.removeTreeSelectionListener(this);
-      MusicLibrary x = new MusicLibraryImpl();
       if(e.getActionCommand().equals("Exit")) {
          System.exit(0);
       }else if(e.getActionCommand().equals("Save")) {
@@ -289,14 +290,21 @@ public class MediaLibraryApp extends MediaLibraryGui implements
          rebuildTree();
  
       }else if(e.getActionCommand().equals("Search")) {
-         String searchReqURL = pre+artistSearchJTF.getText().trim()+"&album="+albumSearchJTF.getText().trim()+
-                               "&api_key="+lastFMKey+"&format=json";
-         System.out.println("calling fetchAsyncURL with url: "+searchReqURL);
-	 String result = fetchURL(searchReqURL);
-	 System.out.println("......" + result);
-	 System.out.println(".....CREATING FILE " );
-	 x.toFile(result);
-	 
+	  String searchReqURL = pre+artistSearchJTF.getText().trim()+"&album="+albumSearchJTF.getText().trim()+
+	      "&api_key="+lastFMKey+"&format=json";
+	  System.out.println("calling fetchAsyncURL with url: "+searchReqURL);
+	  String result = fetchURL(searchReqURL);
+	  System.out.println(".....CREATING FILE " );
+	  MusicLibrary x = new MusicLibrary();
+	  // JSONObject ob = x.getFM(result); //returns a fm jsonobject
+	  // String aa = x.getAlbumName(ob);
+	  // String bb = x.getArtistName(ob);
+	  // String cc = x.getTrackInfo(ob,1,"duration");
+	  // int dd = x.size(ob);
+	  // x.getAllSongs(ob);
+	  JSONObject ob = x.getFM(result); //returns a fm jsonobject
+	  Album al = new Album(ob);
+	  al.print();
       }else if(e.getActionCommand().equals("Tree Refresh")) {
          rebuildTree();
       }else if(e.getActionCommand().equals("TrackRemove")) {
