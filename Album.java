@@ -2,7 +2,7 @@ package ser321.assign2.lindquis;
 
 import java.io.Serializable;
 import org.json.JSONObject;
-
+import java.util.ArrayList;
 
 import com.jayway.jsonpath.JsonPath;
 
@@ -33,7 +33,7 @@ public class Album extends Object implements Serializable {
 
     public  String albumName; //string 
     public  String artist; //string
-    public  String[] tracks; // string array 
+    public  ArrayList<String> tracks; // string array 
     public  String image; //string
     public  String genre; //optional
     public  String runTime; // string hh:mm:ss
@@ -46,9 +46,9 @@ public class Album extends Object implements Serializable {
 	this.genre = "";
 	this.runTime = "";
 	this.summary = "";
-	this.tracks = new String[100];
+	this.tracks = new ArrayList<String>();
     }
-    public Album(String album, String artist, String[] tracks,
+    public Album(String album, String artist, ArrayList<String> tracks,
 		 String img, String genre, String time, String summary){
 	this.albumName = album;
 	this.artist = artist;
@@ -76,7 +76,15 @@ public class Album extends Object implements Serializable {
 			   "\ngenre: "+genre+
 			   "\nrunTime: "+runTime+
 			   "\nsummary: " +summary);
-	for(String x:tracks){System.out.println(x);}
+        tracks.forEach((n)-> System.out.println(n));
     }
-
+    public void getTrack(int index){
+        System.out.println("size of tracks : "+ tracks.size());
+	try{
+	    String song = tracks.get(index);
+	    System.out.println("song you wanted: " + song);
+	}catch(ArrayIndexOutOfBoundsException e) {
+	    System.out.println(e);
+	}
+    }
 }

@@ -116,11 +116,11 @@ public class MusicLibrary extends Object implements Serializable {
 	return size;
     }
     
-    public String[] getAllSongs(JSONObject o) throws JSONException {
+    public ArrayList<String> getAllSongs(JSONObject o) throws JSONException {
 	System.out.println("ENTERING");
-        String[] songs = new String[this.size(o)];
+        ArrayList<String> songs = new ArrayList();
 	for (int i = 0; i< this.size(o); i++){
-	    songs[i]= getTrackInfo(o,i,"name");
+	    songs.add(getTrackInfo(o,i,"name"));
 	}
 	return songs;
     }
@@ -154,9 +154,41 @@ public class MusicLibrary extends Object implements Serializable {
     }
     public static String getSummary(JSONObject o) throws JSONException {
 	JSONObject obj = new JSONObject(o.getJSONObject("album").toString());	
-	String value = JsonPath.read(obj.toString(), "$.wiki.summary"); //value is the value pair of the key
+	String value = JsonPath.read(obj.toString(), "$.wiki.summary"); //value is the value pair of the key(summary)
 	value =  value.replaceAll("[^A-Za-z0-9 ./,]","");
 	System.out.println(value);
 	return value;
     }
+    //----------track info getter -----------------//
+    public String getTrackName(JSONObject o, int index){
+	String trackName = getTrackInfo(o,index,"name");
+	return trackName;
+    }
+
+    public int getRankOrder(JSONObject o, int index){
+	String[] rank = {"@attr","rank"}; 
+    	JSONObject obj = new JSONObject(o.getJSONObject("album").toString());	
+    	String prepath = "$.tracks.track[";
+        String postpath = "].";
+	String path = prepath + index + postpath + rank[0] + "." + rank[1]; 
+        String value = JsonPath.read(obj.toString(), path);      
+        return Integer.parseInt(value);
+
+    }
+    public String getDuration(JSONObject o, int index){
+	DecimalFormat d2 = new DecimalFormat("#.##");
+	int minutes = 0, seconds = 0;
+	int h = 3600, m = 60; 
+	String ret = "";
+	int duration = Integer.parseInt(this.getTrackInfo(o,index,"duration"));
+	minutes = duration /60;
+	seconds =(duration-(minutes*m));
+	if (seconds <10){
+	    ret = Integer.toString(minutes) +":0"+Integer.toString(seconds);
+	} else {
+	    ret = Integer.toString(minutes) +":"+Integer.toString(seconds);
+	}
+	return ret;
+    }
+    
 }
