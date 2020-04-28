@@ -11,7 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import com.jayway.jsonpath.JsonPath;
-
+import java.text.DecimalFormat;
 
 /**
  * Copyright 2020 Kristina Capistrano
@@ -125,11 +125,38 @@ public class MusicLibrary extends Object implements Serializable {
 	return songs;
     }
     public String getRunTime(JSONObject o) throws JSONException {
-	int total = 0;
+	DecimalFormat d2 = new DecimalFormat("#.##");
+	int total = 0, hours = 0, minutes = 0, seconds = 0;
+	int h = 3600, m = 60; 
+	String ret = "";
 	for (int i  = 0; i < this.size(o); i++ ){
 	    total = total + Integer.parseInt(this.getTrackInfo(o,i,"duration"));
 	}
-	int hours = total/60;
-	return Integer.toString(total);
+	if (total>=3600){
+	    hours = total/3600;
+	    minutes = (total -(h*hours))/60;
+	    seconds =(total -(h*hours))%60;
+	    if(seconds <10){
+		ret = Integer.toString(hours)+":"+Integer.toString(minutes) +":0"+Integer.toString(seconds);
+	    } else {
+		ret = Integer.toString(hours)+":"+Integer.toString(minutes) +":"+Integer.toString(seconds);
+	    }
+	}else {
+	    minutes = total /60;
+	    seconds =(total-(minutes*m));
+	    if (seconds <10){
+		ret = Integer.toString(minutes) +":0"+Integer.toString(seconds);
+	    } else {
+		ret = Integer.toString(minutes) +":"+Integer.toString(seconds);
+	    }
+	}
+	return ret;
+    }
+    public static String getSummary(JSONObject o) throws JSONException {
+	JSONObject obj = new JSONObject(o.getJSONObject("album").toString());	
+	String value = JsonPath.read(obj.toString(), "$.wiki.summary"); //value is the value pair of the key
+	value =  value.replaceAll("[^A-Za-z0-9 ./,]","");
+	System.out.println(value);
+	return value;
     }
 }

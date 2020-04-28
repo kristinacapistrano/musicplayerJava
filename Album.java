@@ -64,9 +64,9 @@ public class Album extends Object implements Serializable {
 	this.albumName = lib.getAlbumName(o);
 	this.artist = lib.getArtistName(o);
 	this.image = lib.getImage(o);
-	this.genre = "";
+	this.genre = "Optional";
 	this.runTime = lib.getRunTime(o);
-	this.summary = "";
+	this.summary = lib.getSummary(o);
 	this.tracks = lib.getAllSongs(o);
     }
     public void print(){
