@@ -28,60 +28,73 @@ import org.json.JSONObject;
  */
 public class MediaDescription extends Object implements Serializable {
 
-   public String title;
-   public String author;
-   public String album;
-   public String fileName;
+    public String title;
+    public String author;
+    public String album;
+    public String fileName;
+    public String rank;
+    public String summary;
+    public String duration;
 
-   public MediaDescription(String aTitle, String anAuthor,
-                           String anAlbum, String aFileName){
-      this.title = aTitle;
-      this.author = anAuthor;
-      this.album = anAlbum;
-      this.fileName = aFileName;
-   }
+    public MediaDescription(String aTitle, String anAuthor,
+			    String anAlbum, String aFileName,
+			    String rankOrder, String duration,
+			    String summary){
+	this.title = aTitle;
+	this.author = anAuthor;
+	this.album = anAlbum;
+	this.fileName = aFileName;
+	this.rank = rankOrder;
+	this.duration = duration;
+	this.summary = summary;
 
-   public MediaDescription(String jsonString){
-      this(new JSONObject(jsonString));
-      //System.out.println("constructor from json string got: "+jsonString);
-      //System.out.println("constructed MD: "+this.toJsonString()+" from json");
-   }
+    }
 
-   public MediaDescription(JSONObject jsonObj){
-      try{
-         //System.out.println("constructor from json received: "+
-         //                   jsonObj.toString());
-         title = jsonObj.getString("title");
-         author = jsonObj.getString("author");
-         album = jsonObj.getString("album");
-         fileName = jsonObj.getString("fileName");
-	 // System.out.println("constructed "+this.toJsonString()+" from json");
-      }catch(Exception ex){
-         System.out.println("Exception in MediaDescription(JSONObject): "+ex.getMessage());
-      }
-   }
+    public MediaDescription(String jsonString){
+	this(new JSONObject(jsonString));
+    }
 
-   public String toJsonString(){
-      String ret = "{}";
-      try{
-         ret = this.toJson().toString(0);
-      }catch(Exception ex){
-         System.out.println("Exception in toJsonString: "+ex.getMessage());
-      }
-      return ret;
-   }
+    public MediaDescription(JSONObject jsonObj){
 
-   public JSONObject toJson(){
-      JSONObject obj = new JSONObject();
-      try{
-         obj.put("title", title);
-         obj.put("author", author);
-         obj.put("album", album);
-         obj.put("fileName", fileName);
-      }catch(Exception ex){
-         System.out.println("Exception in toJson: "+ex.getMessage());
-      }
-      return obj;
-   }
+	try{
+	    title = jsonObj.getString("track");
+	    author = jsonObj.getString("artist");
+	    album = jsonObj.getString("album");
+	    fileName = jsonObj.getString("fileName");
+	    rank = jsonObj.getString("rank");
+	    duration = jsonObj.getString("duration");
+	    summary = jsonObj.getString("summary");
+        
+	}catch(Exception ex){
+	    System.out.println("Exception in MediaDescription(JSONObject): "+ex.getMessage());
+	}
+    }
+
+    public String toJsonString(){
+	String ret = "{}";
+	try{
+	    ret = this.toJson().toString(0);
+	}catch(Exception ex){
+	    System.out.println("Exception in toJsonString: "+ex.getMessage());
+	}
+	return ret;
+    }
+
+    public JSONObject toJson(){
+	JSONObject obj = new JSONObject();
+	try{
+	    obj.put("title", title);
+	    obj.put("artist", author);
+	    obj.put("album", album);
+	    obj.put("fileName", fileName);
+	    obj.put("rank",rank);
+	    obj.put("duration",duration);
+	    obj.put("summary",summary);
+
+	}catch(Exception ex){
+	    System.out.println("Exception in toJson: "+ex.getMessage());
+	}
+	return obj;
+    }
 
 }

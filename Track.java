@@ -32,18 +32,18 @@ import com.jayway.jsonpath.JsonPath;
 public class Track extends Object implements Serializable {
     public  String trackName; //string 
     public  String artist; //string
-    public  int rankOrder; //int
+    public  String rankOrder; //int
     public  String duration; //string
     public  String fileName; //optional
 
     public Track(){
 	this.trackName = "";
 	this.artist = "";
-	this.rankOrder = 0;
+	this.rankOrder = "";
 	this.duration = "";
 	this.fileName = "";
     }
-    public Track(String trackName,String artist,int rankOrder,String duration,String fileName){
+    public Track(String trackName,String artist,String rankOrder,String duration,String fileName){
 	this.trackName = trackName;
 	this.artist = artist;
 	this.rankOrder = rankOrder;

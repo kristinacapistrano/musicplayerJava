@@ -37,7 +37,7 @@ public class Album extends Object implements Serializable {
     public  String image; //string
     public  String genre; //optional
     public  String runTime; // string hh:mm:ss
-    public  String summary; //string 
+    public static String summary; //string 
 
     public Album(){
 	this.albumName = "";
@@ -78,13 +78,15 @@ public class Album extends Object implements Serializable {
 			   "\nsummary: " +summary);
         tracks.forEach((n)-> System.out.println(n));
     }
-    public void getTrack(int index){
+    public String getTrack(int index){
         System.out.println("size of tracks : "+ tracks.size());
+	String song = "";
 	try{
-	    String song = tracks.get(index);
+	    song = tracks.get(index);
 	    System.out.println("song you wanted: " + song);
 	}catch(ArrayIndexOutOfBoundsException e) {
 	    System.out.println(e);
 	}
+	return song;
     }
 }

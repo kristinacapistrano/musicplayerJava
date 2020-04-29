@@ -36,6 +36,8 @@ import java.text.DecimalFormat;
  * @version April 2020
  */
 public class MusicLibrary extends Object implements Serializable {
+    private Hashtable<String,Album> aLib;
+
     public static JSONObject getFM (String result){
 	JSONObject fmobj = new JSONObject();
 	System.out.println(" ....GETTING FM DATA ") ; 
@@ -107,19 +109,19 @@ public class MusicLibrary extends Object implements Serializable {
 	return value;
     }
 
-    public int size(JSONObject o) throws JSONException {
+    public String size(JSONObject o) throws JSONException {
 	JSONObject obj = new JSONObject(o.getJSONObject("album").toString());
 	JSONObject tracks = new JSONObject(obj.getJSONObject("tracks").toString());
 	JSONArray trackarray = tracks.getJSONArray("track");
 	int size = trackarray.length();
 	//System.out.println("num of songs: " + size);
-	return size;
+	return String.valueOf(size);
     }
     
     public ArrayList<String> getAllSongs(JSONObject o) throws JSONException {
-	System.out.println("ENTERING");
+	System.out.println("ENTERING - getAllSongs function from MusicLibrary class");
         ArrayList<String> songs = new ArrayList();
-	for (int i = 0; i< this.size(o); i++){
+	for (int i = 0; i< Integer.parseInt(this.size(o)); i++){
 	    songs.add(getTrackInfo(o,i,"name"));
 	}
 	return songs;
@@ -129,7 +131,7 @@ public class MusicLibrary extends Object implements Serializable {
 	int total = 0, hours = 0, minutes = 0, seconds = 0;
 	int h = 3600, m = 60; 
 	String ret = "";
-	for (int i  = 0; i < this.size(o); i++ ){
+	for (int i  = 0; i < Integer.parseInt(this.size(o)); i++ ){
 	    total = total + Integer.parseInt(this.getTrackInfo(o,i,"duration"));
 	}
 	if (total>=3600){
@@ -156,7 +158,6 @@ public class MusicLibrary extends Object implements Serializable {
 	JSONObject obj = new JSONObject(o.getJSONObject("album").toString());	
 	String value = JsonPath.read(obj.toString(), "$.wiki.summary"); //value is the value pair of the key(summary)
 	value =  value.replaceAll("[^A-Za-z0-9 ./,]","");
-	System.out.println(value);
 	return value;
     }
     //----------track info getter -----------------//
@@ -165,14 +166,14 @@ public class MusicLibrary extends Object implements Serializable {
 	return trackName;
     }
 
-    public int getRankOrder(JSONObject o, int index){
+    public String getRankOrder(JSONObject o, int index){
 	String[] rank = {"@attr","rank"}; 
     	JSONObject obj = new JSONObject(o.getJSONObject("album").toString());	
     	String prepath = "$.tracks.track[";
         String postpath = "].";
 	String path = prepath + index + postpath + rank[0] + "." + rank[1]; 
         String value = JsonPath.read(obj.toString(), path);      
-        return Integer.parseInt(value);
+        return value;
 
     }
     public String getDuration(JSONObject o, int index){
@@ -190,5 +191,40 @@ public class MusicLibrary extends Object implements Serializable {
 	}
 	return ret;
     }
-    
+    //------------create json file with only data needed -------//
+    public void createTheFile(JSONObject o) throws JSONException, FileNotFoundException{
+	JSONObject oo = new JSONObject();
+	try {
+	    
+	    PrintWriter pw = new PrintWriter("music.json"); 
+	    for ( int i = 0; i < Integer.parseInt(this.size(o)); i++) {
+		Map<String,String> music = new LinkedHashMap<String, String>(5); 
+		music.put("album", this.getAlbumName(o));
+		music.put("artist", this.getArtistName(o));
+		music.put("track", this.getTrackName(o,i));
+		music.put("duration", this.getDuration(o,i));
+		music.put("rank", this.getRankOrder(o,i));
+		music.put("fileName", "optional");
+		music.put("summary", this.getSummary(o));
+		oo.put(this.getTrackName(o,i),music); //get name of song to be the object name per song
+
+	    }		
+
+	    pw.write(oo.toString(1)); 
+	    pw.flush(); 
+	    pw.close();
+	}catch (FileNotFoundException e){
+	    System.out.println(e);
+	}
+	
+    }
+    public Album get(String mediaTitle){
+	Album result = null;
+	try{
+	    result = aLib.get(mediaTitle);
+	}catch(Exception ex){
+	    System.out.println("exception in get: "+ex.getMessage());
+	}
+	return result;
+    }
 }
