@@ -35,11 +35,12 @@ public class MediaDescription extends Object implements Serializable {
     public String rank;
     public String summary;
     public String duration;
+    public String image;
 
     public MediaDescription(String aTitle, String anAuthor,
 			    String anAlbum, String aFileName,
 			    String rankOrder, String duration,
-			    String summary){
+			    String summary, String image){
 	this.title = aTitle;
 	this.author = anAuthor;
 	this.album = anAlbum;
@@ -47,6 +48,7 @@ public class MediaDescription extends Object implements Serializable {
 	this.rank = rankOrder;
 	this.duration = duration;
 	this.summary = summary;
+	this.image = image;
 
     }
 
@@ -55,8 +57,9 @@ public class MediaDescription extends Object implements Serializable {
     }
 
     public MediaDescription(JSONObject jsonObj){
-
+	 
 	try{
+
 	    title = jsonObj.getString("track");
 	    author = jsonObj.getString("artist");
 	    album = jsonObj.getString("album");
@@ -64,7 +67,7 @@ public class MediaDescription extends Object implements Serializable {
 	    rank = jsonObj.getString("rank");
 	    duration = jsonObj.getString("duration");
 	    summary = jsonObj.getString("summary");
-        
+	    image = jsonObj.getString("image");
 	}catch(Exception ex){
 	    System.out.println("Exception in MediaDescription(JSONObject): "+ex.getMessage());
 	}
@@ -90,6 +93,7 @@ public class MediaDescription extends Object implements Serializable {
 	    obj.put("rank",rank);
 	    obj.put("duration",duration);
 	    obj.put("summary",summary);
+	    obj.put("image",image);
 
 	}catch(Exception ex){
 	    System.out.println("Exception in toJson: "+ex.getMessage());

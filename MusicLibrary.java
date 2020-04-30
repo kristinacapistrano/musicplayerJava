@@ -195,8 +195,11 @@ public class MusicLibrary extends Object implements Serializable {
     public void createTheFile(JSONObject o) throws JSONException, FileNotFoundException{
 	JSONObject oo = new JSONObject();
 	try {
+	    	removeLastChar();
+
+	    FileWriter fw = new FileWriter("music.json",true);
 	    
-	    PrintWriter pw = new PrintWriter("music.json"); 
+	    PrintWriter pw = new PrintWriter(fw); 
 	    for ( int i = 0; i < Integer.parseInt(this.size(o)); i++) {
 		Map<String,String> music = new LinkedHashMap<String, String>(5); 
 		music.put("album", this.getAlbumName(o));
@@ -206,17 +209,46 @@ public class MusicLibrary extends Object implements Serializable {
 		music.put("rank", this.getRankOrder(o,i));
 		music.put("fileName", "optional");
 		music.put("summary", this.getSummary(o));
+		music.put("image",this.getImage(o));
 		oo.put(this.getTrackName(o,i),music); //get name of song to be the object name per song
 
-	    }		
-
-	    pw.write(oo.toString(1)); 
+	    }
+	    String _old = oo.toString(1);
+	    String _new = _old.substring(1,_old.length());
+	    pw.print(_new);
 	    pw.flush(); 
 	    pw.close();
 	}catch (FileNotFoundException e){
 	    System.out.println(e);
+	} catch (IOException ee ) {
+	    System.out.println(ee);
 	}
 	
+    }
+    public void removeLastChar()throws IOException {
+	BufferedReader br = new BufferedReader(new FileReader("music.json"));
+	String str = "";
+	try {
+	    StringBuilder sb = new StringBuilder();
+	    String line = br.readLine();
+
+	    while (line != null) {
+		sb.append("\n" +line);
+		line = br.readLine();
+	    }
+	    str = sb.toString();
+	    str = str.substring(0,str.length()-2) + ",";
+	} finally {
+	    br.close();
+	}
+        try {
+	    FileWriter myWriter = new FileWriter("music.json");
+	    myWriter.write(str);
+	    myWriter.close();
+	} catch (IOException e) {
+	    System.out.println("An error occurred.");
+	    e.printStackTrace();
+	}
     }
     public Album get(String mediaTitle){
 	Album result = null;

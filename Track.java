@@ -35,6 +35,7 @@ public class Track extends Object implements Serializable {
     public  String rankOrder; //int
     public  String duration; //string
     public  String fileName; //optional
+    public String image;
 
     public Track(){
 	this.trackName = "";
@@ -42,13 +43,15 @@ public class Track extends Object implements Serializable {
 	this.rankOrder = "";
 	this.duration = "";
 	this.fileName = "";
+	this.image = "";
     }
-    public Track(String trackName,String artist,String rankOrder,String duration,String fileName){
+    public Track(String trackName,String artist,String rankOrder,String duration,String fileName,String image){
 	this.trackName = trackName;
 	this.artist = artist;
 	this.rankOrder = rankOrder;
 	this.duration = duration;
 	this.fileName = fileName;
+	this.image = image;
     }
     public Track(JSONObject o,int index){
 	MusicLibrary lib = new MusicLibrary();
@@ -57,6 +60,7 @@ public class Track extends Object implements Serializable {
 	this.rankOrder = lib.getRankOrder(o,index);
 	this.duration = lib.getDuration(o,index);
 	this.fileName = "Optional";
+	this.image = lib.getImage(o);
     }
     public void print(){
 	System.out.println("PRINTING TRACK OBJECT");
@@ -64,6 +68,7 @@ public class Track extends Object implements Serializable {
 			   "\nArtist: "+ artist+
 			   "\nRank Order: " +rankOrder+
 			   "\nDuration: "+duration+
-			   "\nFile Name: " +fileName);
+			   "\nFile Name: " +fileName+
+			   "\nImage: " + image);
     }
 }
