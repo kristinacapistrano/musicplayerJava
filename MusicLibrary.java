@@ -35,7 +35,7 @@ import java.text.DecimalFormat;
  *         Software Engineering, CIDSE, IAFSE, ASU Poly
  * @version April 2020
  */
-public class MusicLibrary extends Object implements Serializable {
+public class MusicLibrary implements Serializable {
     private Hashtable<String,Album> aLib;
 
     public static JSONObject getFM (String result){
@@ -192,7 +192,8 @@ public class MusicLibrary extends Object implements Serializable {
 	return ret;
     }
     //------------create json file with only data needed -------//
-    public void createTheFile(JSONObject o) throws JSONException, FileNotFoundException{
+    public void saveFile(JSONObject o) throws JSONException, FileNotFoundException{
+	String _new = "" ;
 	JSONObject oo = new JSONObject();
 	try {
 	    	removeLastChar();
@@ -214,7 +215,7 @@ public class MusicLibrary extends Object implements Serializable {
 
 	    }
 	    String _old = oo.toString(1);
-	    String _new = _old.substring(1,_old.length());
+	    _new = _old.substring(1,_old.length());
 	    pw.print(_new);
 	    pw.flush(); 
 	    pw.close();
@@ -223,7 +224,7 @@ public class MusicLibrary extends Object implements Serializable {
 	} catch (IOException ee ) {
 	    System.out.println(ee);
 	}
-	
+	System.out.println("Returning newly added album: " + _new);
     }
     public void removeLastChar()throws IOException {
 	BufferedReader br = new BufferedReader(new FileReader("music.json"));
